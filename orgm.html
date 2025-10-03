@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <title>Org Manager</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      background: #f4f6f8;
+      color: #1f2933;
+    }
+
+    header {
+      background: #1f6feb;
+      color: #ffffff;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-weight: 600;
+      font-size: inherit;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: inherit;
+      font-weight: 500;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      padding: 16px 24px;
+      background: #ffffff;
+      border-bottom: 1px solid #d1d5db;
+    }
+
+    .toolbar button {
+      padding: 6px 12px;
+      border: 1px solid #2563eb;
+      background: #2563eb;
+      color: #ffffff;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: inherit;
+      transition: background 0.2s ease;
+    }
+
+    .toolbar button.secondary {
+      background: transparent;
+      color: #2563eb;
+    }
+
+    .toolbar button:hover {
+      background: #1d4ed8;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 24px;
+      background: #f8fafc;
+      border-bottom: 1px solid #d1d5db;
+    }
+
+    .tabs button {
+      padding: 8px 16px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      border-radius: 6px 6px 0 0;
+      font-size: inherit;
+      font-weight: 500;
+    }
+
+    .tabs button.active {
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-bottom: none;
+    }
+
+    main {
+      padding: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: inherit;
+    }
+
+    th {
+      background: #f1f5f9;
+      font-weight: 600;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.35);
+      backdrop-filter: blur(2px);
+    }
+
+    .modal {
+      width: min(480px, calc(100% - 32px));
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
+      overflow: hidden;
+      font-size: inherit;
+    }
+
+    .modal header {
+      background: #2563eb;
+      color: #ffffff;
+      padding: 16px 24px;
+    }
+
+    .modal header h2 {
+      margin: 0;
+      font-weight: 600;
+      font-size: inherit;
+    }
+
+    .modal .content {
+      padding: 24px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .modal .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 16px 24px;
+      background: #f8fafc;
+    }
+
+    .modal .actions button {
+      padding: 6px 16px;
+      border-radius: 6px;
+      border: 1px solid #2563eb;
+      cursor: pointer;
+      font-size: inherit;
+    }
+
+    .modal .actions button.primary {
+      background: #2563eb;
+      color: #ffffff;
+    }
+
+    .modal .actions button.secondary {
+      background: transparent;
+      color: #2563eb;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>إدارة المؤسسة</h1>
+    <span class="badge">نظرة عامة</span>
+  </header>
+
+  <div class="toolbar">
+    <button>إضافة قسم</button>
+    <button class="secondary">استيراد</button>
+    <button class="secondary">تصدير</button>
+  </div>
+
+  <div class="tabs">
+    <button class="active">الهيكل التنظيمي</button>
+    <button>الموظفون</button>
+    <button>التقارير</button>
+  </div>
+
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>المنصب</th>
+          <th>القسم</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>سارة الأحمد</td>
+          <td>المديرة العامة</td>
+          <td>الإدارة العليا</td>
+        </tr>
+        <tr>
+          <td>هاني يوسف</td>
+          <td>رئيس قسم الموارد البشرية</td>
+          <td>الموارد البشرية</td>
+        </tr>
+        <tr>
+          <td>ليلى منصور</td>
+          <td>مديرة المشاريع</td>
+          <td>التشغيل</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+  <div class="modal-backdrop" role="presentation">
+    <div class="modal" role="dialog" aria-modal="true">
+      <header>
+        <h2>تفاصيل الموظف</h2>
+      </header>
+      <div class="content">
+        <div><strong>الاسم:</strong> سارة الأحمد</div>
+        <div><strong>المنصب:</strong> المديرة العامة</div>
+        <div><strong>القسم:</strong> الإدارة العليا</div>
+      </div>
+      <div class="actions">
+        <button class="secondary">إغلاق</button>
+        <button class="primary">حفظ</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
