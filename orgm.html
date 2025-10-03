@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>منظومة الحركة التنظيمية</title>
+<!--
+Quick Start:
+1. افتح الملف محليًا في المتصفح (Chrome/Edge).
+2. أدخل كلمة المرور الافتراضية 123 للدخول.
+3. استخدم القوائم المرجعية لإعداد الأنواع، ثم أدخل بيانات بداية السنة، ثم قواعد التأثير، ثم السجل.
+4. احفظ من شريط الأدوات محليًا أو اختر بنك معلومات لحفظ ملف orgm_data.json.
+5. استخدم التبويبات للتنقل، وعناصر التصدير/الاستيراد لإدارة البيانات.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #fff8dc;
+  --paper: #ffffff;
+  --text: #0f172a;
+  --muted: #475569;
+  --divider: #e5e7eb;
+  --header: #4f7942;
+  --success: #16a34a;
+  --error: #ef4444;
+  font-family: 'Noto Sans Arabic', 'Segoe UI', sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Arabic', 'Segoe UI', sans-serif;
+}
+header {
+  background: var(--header);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+header h1 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: var(--error);
+  color: #fff;
+}
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+.toolbar button,
+.toolbar label {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.toolbar button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+main {
+  padding: 1rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.tabs button {
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--divider);
+  background: var(--paper);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.tabs button.active {
+  background: var(--header);
+  color: #fff;
+}
+.panel {
+  background: var(--paper);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid var(--divider);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+  min-height: 55vh;
+}
+.table-container {
+  width: 100%;
+  overflow: auto;
+  border: 1px solid var(--divider);
+  border-radius: 8px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+th, td {
+  padding: 0.6rem;
+  border-bottom: 1px solid var(--divider);
+  text-align: right;
+  font-size: 0.9rem;
+}
+th {
+  background: rgba(79, 121, 66, 0.12);
+  cursor: pointer;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+tr:nth-child(even) td { background: rgba(15, 23, 42, 0.02); }
+button.primary {
+  background: var(--header);
+  color: #fff;
+  border: none;
+}
+button.danger {
+  background: var(--error);
+  color: #fff;
+  border: none;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  align-items: center;
+}
+.controls input,
+.controls select {
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--divider);
+  font-size: 0.9rem;
+}
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+.modal {
+  background: var(--paper);
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 95%;
+  max-height: 90vh;
+  overflow: auto;
+}
+.modal header {
+  background: none;
+  color: var(--text);
+  padding: 0;
+  justify-content: space-between;
+}
+.modal header h2 { margin: 0; font-size: 1.1rem; }
+.modal footer {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+.message-area {
+  margin: 0.5rem 1rem;
+}
+.message {
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.message.success { background: rgba(22, 163, 74, 0.12); color: var(--success); }
+.message.error { background: rgba(239, 68, 68, 0.12); color: var(--error); }
+.lock-screen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(79, 121, 66, 0.9), rgba(15, 23, 42, 0.9));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  z-index: 2000;
+}
+.lock-card {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 2rem;
+  border-radius: 16px;
+  width: 320px;
+  backdrop-filter: blur(6px);
+  text-align: center;
+}
+.lock-card input {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: none;
+  margin: 1rem 0;
+  text-align: center;
+  font-size: 1rem;
+}
+.lock-card button {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 8px;
+  border: none;
+  background: var(--success);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+@media (max-width: 900px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  header h1 { font-size: 1rem; }
+  .toolbar { width: 100%; }
+  .toolbar button { flex: 1; justify-content: center; }
+}
+.virtual-table {
+  position: relative;
+  height: 400px;
+  overflow-y: auto;
+}
+.virtual-spacer {
+  height: 0px;
+}
+.checkbox-cell {
+  text-align: center;
+}
+.tooltip {
+  position: relative;
+}
+.tooltip span {
+  visibility: hidden;
+  background: #000;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  position: absolute;
+  top: -150%;
+  right: 0;
+  white-space: nowrap;
+  font-size: 0.7rem;
+}
+.tooltip:hover span { visibility: visible; }
+</style>
+</head>
+<body>
+<div class="lock-screen" id="lockScreen" aria-label="شاشة القفل">
+  <div class="lock-card">
+    <h2>مرحبًا بك</h2>
+    <p>أدخل كلمة المرور للمتابعة</p>
+    <input type="password" id="lockPassword" aria-label="كلمة المرور" placeholder="***" />
+    <button id="unlockBtn">دخول</button>
+    <p style="font-size:0.8rem;color:#fefae0;">تلميح: استخدم كلمة المرور الافتراضية أو حدّثها من رأس الملف.</p>
+  </div>
+</div>
+<header>
+  <h1>منظومة الحركة التنظيمية للأفراد</h1>
+  <div class="badge" id="saveStatus">غير معيّن</div>
+  <div class="toolbar" role="toolbar" aria-label="شريط الأدوات">
+    <button data-action="help" title="إظهار المساعدة">؟</button>
+    <button data-action="save" title="حفظ الآن (S)">💾 حفظ الآن</button>
+    <button data-action="pick" title="تعيين بنك المعلومات">🗂️ تعيين بنك</button>
+    <button data-action="loadFolder" title="قراءة من البنك" style="display:none;">📥 قراءة</button>
+    <button data-action="exportJSON" title="تصدير JSON (Ctrl+J)">🧾 تصدير JSON</button>
+    <button data-action="importJSON" title="استيراد JSON">📄 استيراد JSON</button>
+    <button data-action="clear" title="تفريغ القاعدة">🧹 تفريغ</button>
+    <button data-action="fullscreen" title="ملء الشاشة (F)">⛶ ملء</button>
+    <button data-action="exportExcel" title="تصدير كافة الجداول (Ctrl+E)">📊 تصدير Excel</button>
+    <button data-action="importExcel" title="استيراد كافة الجداول">📁 استيراد Excel</button>
+  </div>
+</header>
+<div class="message-area" aria-live="polite"></div>
+<main>
+  <div class="tabs" role="tablist">
+    <button class="active" data-tab="BY">بداية السنة (BY)</button>
+    <button data-tab="CY">الوضعية الحالية (CY)</button>
+    <button data-tab="LOG">سجل الإجراءات (LOG)</button>
+    <button data-tab="AFX">تأثيرات الإجراءات (AFX)</button>
+    <button data-tab="ENT">الجهة</button>
+    <button data-tab="REF">القوائم المرجعية</button>
+    <button data-tab="FORM">تعديلات التشكيل</button>
+    <button data-tab="REP">الكشوفات</button>
+    <button data-tab="HELP">تعليمات/مساعدة</button>
+  </div>
+  <section class="panel" id="panelBY"></section>
+  <section class="panel" id="panelCY" style="display:none;"></section>
+  <section class="panel" id="panelLOG" style="display:none;"></section>
+  <section class="panel" id="panelAFX" style="display:none;"></section>
+  <section class="panel" id="panelENT" style="display:none;"></section>
+  <section class="panel" id="panelREF" style="display:none;"></section>
+  <section class="panel" id="panelFORM" style="display:none;"></section>
+  <section class="panel" id="panelREP" style="display:none;"></section>
+  <section class="panel" id="panelHELP" style="display:none;"></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+const APP_PASSWORD = "123"; // يمكن تعديل كلمة المرور هنا
+
+/* وحدة الحماية: شاشة القفل */
+(function() {
+  const lock = document.getElementById('lockScreen');
+  const input = document.getElementById('lockPassword');
+  const btn = document.getElementById('unlockBtn');
+  const KEY = 'orgm_session';
+  function attemptUnlock() {
+    if (input.value.trim() === APP_PASSWORD) {
+      sessionStorage.setItem(KEY, '1');
+      lock.style.display = 'none';
+      input.value = '';
+      showMessage('success', 'تم فتح التطبيق.');
+    } else {
+      showMessage('error', 'كلمة المرور غير صحيحة.');
+    }
+  }
+  btn.addEventListener('click', attemptUnlock);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') attemptUnlock();
+  });
+  if (sessionStorage.getItem(KEY) === '1') {
+    lock.style.display = 'none';
+  }
+})();
+
+/* وحدة البيانات: التخزين والحالة */
+const DataStore = (() => {
+  const LOCAL_KEY = 'orgm_store_v1';
+  let data = null;
+  let isDirty = false;
+  let folderHandle = null;
+  let folderLoaded = false;
+
+  const defaultData = () => ({
+    referenceLists: {
+      actionTypes: ["تعيين","نقل","تكليف","إعفاء"],
+      linkTypes: ["أساسي","مشارك","متوقف"],
+      linkForms: ["دائم","مؤقت"],
+      descriptors: ["كادر","متفرغ","متطوع"],
+      formations: ["-","خلية","فريق","شعبة"]
+    },
+    entities: [
+      { root: 'الجد أحمد', parent: 'الأب خالد', child: 'الابن A' },
+      { root: 'الجد ليلى', parent: 'الأب مريم', child: 'الابن B' }
+    ],
+    beginYear: [
+      { root: 'الجد أحمد', parent: 'الأب خالد', child: 'الابن A', countsByLinkType: { 'أساسي': 5, 'مشارك': 2 } },
+      { root: 'الجد ليلى', parent: 'الأب مريم', child: 'الابن B', countsByLinkType: { 'أساسي': 3, 'مشارك': 1 } }
+    ],
+    actionsLog: [
+      {
+        id: crypto.randomUUID(), number: '1', actionType: 'تعيين',
+        prev: { root: 'الجد أحمد', parent: 'الأب خالد', child: 'الابن A', linkType: 'أساسي', linkForm: 'دائم', descriptor: 'كادر', formation: '-' },
+        next: { root: 'الجد أحمد', parent: 'الأب خالد', child: 'الابن A', linkType: 'أساسي', linkForm: 'دائم', descriptor: 'كادر', formation: 'خلية' },
+        actionDate: '2025-01-10', entryDate: '2025-01-12'
+      },
+      {
+        id: crypto.randomUUID(), number: '2', actionType: 'إعفاء',
+        prev: { root: 'الجد أحمد', parent: 'الأب خالد', child: 'الابن A', linkType: 'أساسي', linkForm: 'دائم', descriptor: 'كادر', formation: 'خلية' },
+        next: { root: 'الجد أحمد', parent: 'الأب خالد', child: 'الابن A', linkType: 'أساسي', linkForm: 'دائم', descriptor: 'كادر', formation: '-' },
+        actionDate: '2025-02-01', entryDate: '2025-02-02'
+      },
+      {
+        id: crypto.randomUUID(), number: '3', actionType: 'نقل',
+        prev: { root: 'الجد أحمد', parent: 'الأب خالد', child: 'الابن A', linkType: 'أساسي', linkForm: 'دائم', descriptor: 'كادر', formation: '-' },
+        next: { root: 'الجد أحمد', parent: 'الأب يونس', child: 'الابن A', linkType: 'أساسي', linkForm: 'دائم', descriptor: 'كادر', formation: '-' },
+        actionDate: '2025-03-01', entryDate: '2025-03-03'
+      }
+    ],
+    effects: [
+      { id: crypto.randomUUID(), actionType: 'تعيين', applyTo: 'next', deltasPrev: {}, deltasNext: { 'أساسي': 1 } },
+      { id: crypto.randomUUID(), actionType: 'إعفاء', applyTo: 'prev', deltasPrev: { 'أساسي': -1 }, deltasNext: {} },
+      { id: crypto.randomUUID(), actionType: 'نقل', applyTo: 'bothDifferent', deltasPrev: { 'أساسي': -1 }, deltasNext: { 'أساسي': 1 } }
+    ],
+    formationArchive: {}
+  });
+
+  function getData() {
+    if (!data) {
+      const local = localStorage.getItem(LOCAL_KEY);
+      if (local) {
+        try { data = JSON.parse(local); }
+        catch(e) { data = defaultData(); }
+      } else {
+        data = defaultData();
+      }
+    }
+    return data;
+  }
+  function markDirty(value = true) {
+    isDirty = value;
+    updateSaveStatus();
+  }
+  function saveLocal() {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(getData()));
+    markDirty(false);
+    showMessage('success', 'تم حفظ البيانات محليًا.');
+  }
+  function loadLocal() {
+    data = null;
+    markDirty(false);
+    renderAll();
+  }
+  function setFolderHandle(handle) {
+    folderHandle = handle;
+    folderLoaded = !!handle;
+    if (handle) {
+      const dbreq = indexedDB.open('orgm_fs', 1);
+      dbreq.onupgradeneeded = () => {
+        dbreq.result.createObjectStore('handles');
+      };
+      dbreq.onsuccess = () => {
+        const tx = dbreq.result.transaction('handles', 'readwrite');
+        tx.objectStore('handles').put(handle, 'folder');
+        tx.oncomplete = () => updateSaveStatus();
+      };
+    }
+  }
+  function initFolder() {
+    const dbreq = indexedDB.open('orgm_fs', 1);
+    dbreq.onupgradeneeded = () => {
+      dbreq.result.createObjectStore('handles');
+    };
+    dbreq.onsuccess = () => {
+      const tx = dbreq.result.transaction('handles', 'readonly');
+      const req = tx.objectStore('handles').get('folder');
+      req.onsuccess = async () => {
+        if (req.result) {
+          folderHandle = req.result;
+          try {
+            await folderHandle.getFileHandle('orgm_data.json');
+            folderLoaded = true;
+          } catch(e) {
+            folderLoaded = true;
+          }
+          updateSaveStatus();
+          document.querySelector('[data-action="loadFolder"]').style.display = 'inline-flex';
+        }
+      };
+    };
+  }
+  function getFolderHandle() { return folderHandle; }
+  function isFolderLoaded() { return folderLoaded; }
+  function getDirty() { return isDirty; }
+  function setData(newData, dirty = true) {
+    data = newData;
+    markDirty(dirty);
+    renderAll();
+  }
+
+  return {
+    getData,
+    markDirty,
+    saveLocal,
+    loadLocal,
+    setFolderHandle,
+    getFolderHandle,
+    isFolderLoaded,
+    getDirty,
+    setData,
+    initFolder
+  };
+})();
+
+/* وحدة الرسائل: إشعارات المستخدم */
+function showMessage(type, text) {
+  const container = document.querySelector('.message-area');
+  const el = document.createElement('div');
+  el.className = `message ${type}`;
+  el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+    <span>${text}</span>
+    <button class="primary" style="padding:0.25rem 0.5rem;" onclick="navigator.clipboard.writeText('${text.replace(/'/g, "\\'")}')">نسخ</button>
+  </div>`;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 6000);
+}
+
+/* وحدة الحالة المرئية للحفظ */
+function updateSaveStatus() {
+  const badge = document.getElementById('saveStatus');
+  const dirty = DataStore.getDirty();
+  const folder = DataStore.getFolderHandle();
+  if (!folder) {
+    badge.textContent = 'محفوظ محليًا فقط';
+    badge.style.background = 'var(--error)';
+  } else if (dirty) {
+    badge.textContent = 'بحاجة للحفظ';
+    badge.style.background = '#f97316';
+  } else {
+    badge.textContent = 'محفوظ وجاهز';
+    badge.style.background = 'var(--success)';
+  }
+  const loadBtn = document.querySelector('[data-action="loadFolder"]');
+  if (folder) loadBtn.style.display = 'inline-flex';
+}
+
+/* وحدة المرافق: توابع المساعدة */
+function applyDelta(countMap, deltaMap) {
+  const result = { ...countMap };
+  for (const [key, delta] of Object.entries(deltaMap || {})) {
+    const val = (result[key] || 0) + delta;
+    result[key] = Math.max(0, val);
+  }
+  return result;
+}
+
+function computeCY(by, log, afx) {
+  const mapKey = (row) => `${row.root}||${row.parent}||${row.child}`;
+  const resultMap = new Map();
+  const linkTypesOrder = DataStore.getData().referenceLists.linkTypes;
+
+  by.forEach(row => {
+    resultMap.set(mapKey(row), {
+      root: row.root,
+      parent: row.parent,
+      child: row.child,
+      countsByLinkType: { ...row.countsByLinkType }
+    });
+  });
+
+  const sortedLog = [...log].sort((a, b) => new Date(a.actionDate || '1970-01-01') - new Date(b.actionDate || '1970-01-01'));
+  sortedLog.forEach(entry => {
+    const effectRules = afx.filter(rule => rule.actionType === entry.actionType);
+    effectRules.forEach(rule => {
+      const prevKey = mapKey(entry.prev);
+      const nextKey = mapKey(entry.next);
+      if (rule.applyTo === 'prev' || rule.applyTo === 'bothSame' || rule.applyTo === 'bothDifferent') {
+        if (!resultMap.has(prevKey)) {
+          resultMap.set(prevKey, { root: entry.prev.root, parent: entry.prev.parent, child: entry.prev.child, countsByLinkType: {} });
+        }
+        const obj = resultMap.get(prevKey);
+        obj.countsByLinkType = applyDelta(obj.countsByLinkType, rule.deltasPrev);
+        resultMap.set(prevKey, obj);
+      }
+      if (rule.applyTo === 'next' || rule.applyTo === 'bothSame' || rule.applyTo === 'bothDifferent') {
+        if (!resultMap.has(nextKey)) {
+          resultMap.set(nextKey, { root: entry.next.root, parent: entry.next.parent, child: entry.next.child, countsByLinkType: {} });
+        }
+        const obj = resultMap.get(nextKey);
+        obj.countsByLinkType = applyDelta(obj.countsByLinkType, rule.deltasNext);
+        resultMap.set(nextKey, obj);
+      }
+    });
+  });
+
+  const rows = Array.from(resultMap.values());
+  rows.forEach(row => {
+    linkTypesOrder.forEach(type => {
+      if (!(type in row.countsByLinkType)) row.countsByLinkType[type] = 0;
+    });
+  });
+  return rows;
+}
+
+async function pickFolder() {
+  if (!window.showDirectoryPicker) {
+    showMessage('error', 'المتصفح لا يدعم File System Access API.');
+    return;
+  }
+  try {
+    const handle = await window.showDirectoryPicker();
+    DataStore.setFolderHandle(handle);
+    showMessage('success', 'تم تعيين بنك المعلومات.');
+  } catch (e) {
+    showMessage('error', 'تم إلغاء اختيار المجلد.');
+  }
+}
+
+async function saveToFolder() {
+  const handle = DataStore.getFolderHandle();
+  if (!handle) {
+    showMessage('error', 'لم يتم تعيين بنك المعلومات.');
+    return;
+  }
+  try {
+    const fileHandle = await handle.getFileHandle('orgm_data.json', { create: true });
+    const writable = await fileHandle.createWritable();
+    await writable.write(JSON.stringify(DataStore.getData(), null, 2));
+    await writable.close();
+    DataStore.markDirty(false);
+    showMessage('success', 'تم الحفظ في بنك المعلومات.');
+    const loadBtn = document.querySelector('[data-action="loadFolder"]');
+    loadBtn.style.display = 'inline-flex';
+  } catch (e) {
+    showMessage('error', 'تعذر الكتابة إلى المجلد.');
+  }
+}
+
+async function loadFromFolder() {
+  const handle = DataStore.getFolderHandle();
+  if (!handle) {
+    showMessage('error', 'لا يوجد بنك محدد.');
+    return;
+  }
+  try {
+    const fileHandle = await handle.getFileHandle('orgm_data.json');
+    const file = await fileHandle.getFile();
+    const text = await file.text();
+    DataStore.setData(JSON.parse(text), false);
+    showMessage('success', 'تم تحميل البيانات من البنك.');
+  } catch (e) {
+    showMessage('error', 'تعذر قراءة الملف من البنك.');
+  }
+}
+
+function saveLocal() { DataStore.saveLocal(); }
+function loadLocal() { DataStore.loadLocal(); }
+
+function importCSV() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.csv';
+  input.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      showMessage('success', 'تم قراءة ملف CSV. يرجى استخدام أدوات الاستيراد المتخصصة في كل تبويب.');
+    };
+    reader.readAsText(file);
+  });
+  input.click();
+}
+
+function exportCSV(filename, rows) {
+  const content = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+}
+
+async function importXLSX(file, handler) {
+  try {
+    const data = await file.arrayBuffer();
+    const workbook = XLSX.read(data, { type: 'array' });
+    handler(workbook);
+  } catch (e) {
+    showMessage('error', 'تعذر قراءة ملف Excel.');
+  }
+}
+
+function exportXLSX(sheets) {
+  const wb = XLSX.utils.book_new();
+  sheets.forEach(sheet => {
+    const ws = XLSX.utils.aoa_to_sheet(sheet.rows);
+    XLSX.utils.book_append_sheet(wb, ws, sheet.name);
+  });
+  const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([wbout], { type: 'application/octet-stream' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `orgm_export_${new Date().toISOString().slice(0,19)}.xlsx`;
+  link.click();
+}
+
+function parseWorkbook(workbook) {
+  const baseLists = JSON.parse(JSON.stringify(DataStore.getData().referenceLists));
+  const newData = {
+    referenceLists: baseLists,
+    entities: [],
+    beginYear: [],
+    actionsLog: [],
+    effects: [],
+    formationArchive: {}
+  };
+  if (workbook.Sheets['Lists']) {
+    const rows = XLSX.utils.sheet_to_json(workbook.Sheets['Lists'], { header: 1 });
+    rows.forEach(([key, value]) => {
+      if (key && newData.referenceLists[key] !== undefined) {
+        newData.referenceLists[key] = value ? value.split('|').map(v => v.trim()).filter(Boolean) : [];
+      }
+    });
+  }
+  if (workbook.Sheets['Entities']) {
+    const rows = XLSX.utils.sheet_to_json(workbook.Sheets['Entities'], { header: 1 });
+    rows.shift();
+    rows.forEach(row => {
+      const [root, parent, child] = row;
+      if (root && parent && child) newData.entities.push({ root, parent, child });
+    });
+  }
+  if (workbook.Sheets['BY']) {
+    const rows = XLSX.utils.sheet_to_json(workbook.Sheets['BY'], { header: 1 });
+    const headers = rows.shift() || [];
+    const linkTypes = headers.slice(4);
+    linkTypes.forEach(type => {
+      if (type && !newData.referenceLists.linkTypes.includes(type)) newData.referenceLists.linkTypes.push(type);
+    });
+    rows.forEach(line => {
+      if (!line || !line.length) return;
+      const row = { root: line[1] || '', parent: line[2] || '', child: line[3] || '', countsByLinkType: {} };
+      linkTypes.forEach((type, idx) => {
+        if (!type) return;
+        const val = Number(line[4 + idx]) || 0;
+        row.countsByLinkType[type] = Math.max(0, val);
+      });
+      if (row.child) newData.beginYear.push(row);
+    });
+  }
+  if (workbook.Sheets['LOG']) {
+    const rows = XLSX.utils.sheet_to_json(workbook.Sheets['LOG'], { header: 1 });
+    rows.shift();
+    rows.forEach(line => {
+      if (!line || !line.length) return;
+      const rec = {
+        id: crypto.randomUUID(),
+        number: line[0] || '',
+        actionType: line[1] || '',
+        prev: { root: line[2] || '', parent: line[3] || '', child: line[4] || '', linkType: line[5] || '', linkForm: line[6] || '', descriptor: line[7] || '', formation: line[8] || '' },
+        next: { root: line[9] || '', parent: line[10] || '', child: line[11] || '', linkType: line[12] || '', linkForm: line[13] || '', descriptor: line[14] || '', formation: line[15] || '' },
+        actionDate: line[16] || '',
+        entryDate: line[17] || ''
+      };
+      newData.actionsLog.push(rec);
+    });
+  }
+  if (workbook.Sheets['AFX']) {
+    const rows = XLSX.utils.sheet_to_json(workbook.Sheets['AFX'], { header: 1 });
+    rows.shift();
+    rows.forEach(line => {
+      if (!line || !line.length) return;
+      newData.effects.push({
+        id: crypto.randomUUID(),
+        actionType: line[0] || '',
+        applyTo: line[1] || 'next',
+        deltasPrev: line[2] ? JSON.parse(line[2]) : {},
+        deltasNext: line[3] ? JSON.parse(line[3]) : {}
+      });
+    });
+  }
+  return newData;
+}
+
+/* وحدة الواجهة: التبويبات والرسم */
+const TabManager = (() => {
+  const tabs = document.querySelectorAll('.tabs button');
+  const panels = {
+    BY: document.getElementById('panelBY'),
+    CY: document.getElementById('panelCY'),
+    LOG: document.getElementById('panelLOG'),
+    AFX: document.getElementById('panelAFX'),
+    ENT: document.getElementById('panelENT'),
+    REF: document.getElementById('panelREF'),
+    FORM: document.getElementById('panelFORM'),
+    REP: document.getElementById('panelREP'),
+    HELP: document.getElementById('panelHELP')
+  };
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      Object.values(panels).forEach(p => p.style.display = 'none');
+      panels[tab.dataset.tab].style.display = 'block';
+      renderByTab(tab.dataset.tab);
+    });
+  });
+  return { renderByTab };
+})();
+
+function renderByTab(tab) {
+  switch(tab) {
+    case 'BY': renderTableBY(); break;
+    case 'CY': renderTableCY(); break;
+    case 'LOG': renderTableLOG(); break;
+    case 'AFX': renderTableAFX(); break;
+    case 'ENT': renderEntities(); break;
+    case 'REF': renderLists(); break;
+    case 'FORM': renderFormChanges(); break;
+    case 'REP': renderReports(); break;
+    case 'HELP': renderHelp(); break;
+  }
+}
+
+function renderAll() {
+  ['BY','CY','LOG','AFX','ENT','REF','FORM','REP','HELP'].forEach(renderByTab);
+  updateSaveStatus();
+}
+
+/* وحدة BY: إدارة بداية السنة */
+function renderTableBY() {
+  const panel = document.getElementById('panelBY');
+  const data = DataStore.getData();
+  const linkTypes = data.referenceLists.linkTypes;
+  const searchId = 'searchBY';
+  panel.innerHTML = `
+    <div class="controls">
+      <input id="${searchId}" type="search" placeholder="بحث (/)" aria-label="بحث في بداية السنة" />
+      <button class="primary" id="addBY" title="إضافة صف (N)">➕ إضافة</button>
+      <button id="importBY">📥 استيراد</button>
+      <button id="templateBY">📄 تنزيل قالب</button>
+      <button id="exportBY">📊 تصدير</button>
+    </div>
+    <div class="table-container"><table aria-label="جدول بداية السنة"><thead><tr>
+      <th>#</th>
+      <th>الجد</th>
+      <th>الأب</th>
+      <th>الابن</th>
+      ${linkTypes.map(t => `<th>${t}</th>`).join('')}
+      <th>إجراءات</th>
+    </tr></thead><tbody></tbody></table></div>
+  `;
+  const tbody = panel.querySelector('tbody');
+  let sortKey = null;
+  let sortDir = 1;
+  const getValue = (row, key) => {
+    if (!key) return '';
+    if (key === 'root' || key === 'parent' || key === 'child') return row[key] || '';
+    if (key.startsWith('count:')) {
+      const type = key.split(':')[1];
+      return row.countsByLinkType?.[type] || 0;
+    }
+    return '';
+  };
+  function populate(filter = '') {
+    tbody.innerHTML = '';
+    let rows = data.beginYear.map((row, originalIndex) => ({ row, originalIndex }));
+    rows = rows.filter(item => {
+      const target = `${item.row.root} ${item.row.parent} ${item.row.child}`;
+      return target.includes(filter);
+    });
+    if (sortKey) {
+      rows.sort((a, b) => {
+        const va = getValue(a.row, sortKey);
+        const vb = getValue(b.row, sortKey);
+        if (typeof va === 'number' || typeof vb === 'number') {
+          return (va - vb) * sortDir;
+        }
+        return va.toString().localeCompare(vb.toString(), 'ar') * sortDir;
+      });
+    }
+    rows.forEach((item, idx) => {
+      const row = item.row;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${row.root}</td>
+        <td>${row.parent}</td>
+        <td>${row.child}</td>
+        ${linkTypes.map(t => `<td>${row.countsByLinkType[t] || 0}</td>`).join('')}
+        <td>
+          <button class="primary" data-edit="${item.originalIndex}">تعديل</button>
+          <button class="danger" data-del="${item.originalIndex}">حذف</button>
+        </td>`;
+      tbody.appendChild(tr);
+    });
+    tbody.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => openBYModal(parseInt(btn.dataset.edit))));
+    tbody.querySelectorAll('[data-del]').forEach(btn => btn.addEventListener('click', () => deleteBY(parseInt(btn.dataset.del))));
+  }
+  const headers = panel.querySelectorAll('thead th');
+  headers.forEach((th, idx) => {
+    if (idx === 0 || idx === headers.length - 1) return;
+    let key = '';
+    if (idx === 1) key = 'root';
+    else if (idx === 2) key = 'parent';
+    else if (idx === 3) key = 'child';
+    else key = `count:${linkTypes[idx - 4]}`;
+    th.addEventListener('click', () => {
+      if (sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
+      populate(panel.querySelector(`#${searchId}`).value.trim());
+    });
+  });
+  populate();
+  panel.querySelector(`#${searchId}`).addEventListener('input', (e) => populate(e.target.value.trim()));
+  panel.querySelector('#addBY').addEventListener('click', () => openBYModal());
+  panel.querySelector('#templateBY').addEventListener('click', () => {
+    const header = ['root','parent','child',...linkTypes];
+    exportCSV('BY_template.csv', [header]);
+  });
+  panel.querySelector('#exportBY').addEventListener('click', () => {
+    const rows = [ ['#','root','parent','child',...linkTypes] ];
+    data.beginYear.forEach((row, idx) => rows.push([idx+1,row.root,row.parent,row.child,...linkTypes.map(t => row.countsByLinkType[t]||0)]));
+    exportXLSX([{ name: 'BY', rows }]);
+  });
+  panel.querySelector('#importBY').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.xlsx,.xls,.csv';
+    input.onchange = () => {
+      const file = input.files[0];
+      if (!file) return;
+      importXLSX(file, (workbook) => {
+        const first = workbook.SheetNames[0];
+        const ws = workbook.Sheets[first];
+        const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        const headers = rows.shift();
+        const newRows = [];
+        rows.forEach(line => {
+          if (!line.length) return;
+          const obj = { root: '', parent: '', child: '', countsByLinkType: {} };
+          headers.forEach((h, idx) => {
+            const val = line[idx];
+            if (h === 'root') obj.root = val || '';
+            else if (h === 'parent') obj.parent = val || '';
+            else if (h === 'child') obj.child = val || '';
+            else if (h) {
+              if (!obj.countsByLinkType[h]) obj.countsByLinkType[h] = 0;
+              obj.countsByLinkType[h] = Math.max(0, Number(val) || 0);
+              if (!data.referenceLists.linkTypes.includes(h)) {
+                data.referenceLists.linkTypes.push(h);
+              }
+            }
+          });
+          if (obj.child) newRows.push(obj);
+        });
+        if (!newRows.length) {
+          showMessage('error', 'لم يتم العثور على صفوف صالحة.');
+          return;
+        }
+        if (confirm('هل تريد استبدال بيانات بداية السنة الحالية؟')) {
+          data.beginYear = newRows;
+        } else {
+          data.beginYear.push(...newRows);
+        }
+        DataStore.markDirty();
+        renderAll();
+        showMessage('success', 'تم استيراد بيانات BY.');
+      });
+    };
+    input.click();
+  });
+}
+function openBYModal(index = null) {
+  const data = DataStore.getData();
+  const linkTypes = data.referenceLists.linkTypes;
+  const row = index != null ? { ...data.beginYear[index], countsByLinkType: { ...data.beginYear[index].countsByLinkType } } : { root: '', parent: '', child: '', countsByLinkType: {} };
+  const modal = document.createElement('div');
+  modal.className = 'modal-backdrop';
+  modal.innerHTML = `
+    <div class="modal" role="dialog" aria-modal="true">
+      <header><h2>${index != null ? 'تعديل صف' : 'إضافة صف جديد'}</h2><button onclick="this.closest('.modal-backdrop').remove()">✖</button></header>
+      <div class="form-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.75rem;">
+        <label>الجد<input type="text" id="byRoot" value="${row.root || ''}"></label>
+        <label>الأب<input type="text" id="byParent" value="${row.parent || ''}"></label>
+        <label>الابن<input type="text" id="byChild" value="${row.child || ''}"></label>
+        ${linkTypes.map(t => `<label>${t}<input type="number" min="0" value="${row.countsByLinkType[t] || 0}" data-type="${t}"></label>`).join('')}
+      </div>
+      <footer>
+        <button class="primary" id="saveBY">حفظ</button>
+        <button onclick="this.closest('.modal-backdrop').remove()">إلغاء</button>
+      </footer>
+    </div>`;
+  modal.querySelector('#saveBY').addEventListener('click', () => {
+    const root = modal.querySelector('#byRoot').value.trim();
+    const parent = modal.querySelector('#byParent').value.trim();
+    const child = modal.querySelector('#byChild').value.trim();
+    if (!root || !parent || !child) {
+      showMessage('error', 'يجب تعبئة الحقول الأساسية.');
+      return;
+    }
+    const counts = {};
+    modal.querySelectorAll('input[data-type]').forEach(input => {
+      counts[input.dataset.type] = Math.max(0, Number(input.value) || 0);
+    });
+    if (index != null) {
+      data.beginYear[index] = { root, parent, child, countsByLinkType: counts };
+    } else {
+      data.beginYear.push({ root, parent, child, countsByLinkType: counts });
+    }
+    DataStore.markDirty();
+    renderAll();
+    modal.remove();
+  });
+  document.body.appendChild(modal);
+}
+
+function deleteBY(index) {
+  if (!confirm('تأكيد حذف صف بداية السنة؟')) return;
+  const data = DataStore.getData();
+  data.beginYear.splice(index, 1);
+  DataStore.markDirty();
+  renderAll();
+}
+
+/* وحدة CY: عرض الوضعية الحالية */
+function renderTableCY() {
+  const panel = document.getElementById('panelCY');
+  const data = DataStore.getData();
+  const linkTypes = data.referenceLists.linkTypes;
+  const cyRows = computeCY(data.beginYear, data.actionsLog, data.effects);
+  panel.innerHTML = `
+    <div class="controls">
+      <input id="searchCY" type="search" placeholder="بحث" />
+      <button id="exportCY">📊 تصدير</button>
+    </div>
+    <div class="table-container"><table><thead><tr>
+      <th>#</th><th>الجد</th><th>الأب</th><th>الابن</th>
+      ${linkTypes.map(t => `<th>${t}</th>`).join('')}
+    </tr></thead><tbody></tbody></table></div>`;
+  const tbody = panel.querySelector('tbody');
+  let sortKey = null;
+  let sortDir = 1;
+  const getValue = (row, key) => {
+    if (key === 'root' || key === 'parent' || key === 'child') return row[key] || '';
+    if (key && key.startsWith('count:')) {
+      const type = key.split(':')[1];
+      return row.countsByLinkType?.[type] || 0;
+    }
+    return '';
+  };
+  const renderRows = (filter = '') => {
+    tbody.innerHTML = '';
+    let rows = cyRows.filter(row => `${row.root}${row.parent}${row.child}`.includes(filter));
+    if (sortKey) {
+      rows = [...rows].sort((a, b) => {
+        const va = getValue(a, sortKey);
+        const vb = getValue(b, sortKey);
+        if (typeof va === 'number' || typeof vb === 'number') {
+          return (va - vb) * sortDir;
+        }
+        return va.toString().localeCompare(vb.toString(), 'ar') * sortDir;
+      });
+    }
+    rows.forEach((row, idx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${idx+1}</td><td>${row.root}</td><td>${row.parent}</td><td>${row.child}</td>${linkTypes.map(t => `<td>${row.countsByLinkType[t]||0}</td>`).join('')}`;
+      tbody.appendChild(tr);
+    });
+  };
+  panel.querySelectorAll('thead th').forEach((th, idx, arr) => {
+    if (idx === 0) return;
+    let key = '';
+    if (idx === 1) key = 'root';
+    else if (idx === 2) key = 'parent';
+    else if (idx === 3) key = 'child';
+    else key = `count:${linkTypes[idx - 4]}`;
+    th.addEventListener('click', () => {
+      if (sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
+      renderRows(panel.querySelector('#searchCY').value.trim());
+    });
+  });
+  renderRows();
+  panel.querySelector('#searchCY').addEventListener('input', e => renderRows(e.target.value.trim()));
+  panel.querySelector('#exportCY').addEventListener('click', () => {
+    const rows = [['#','root','parent','child',...linkTypes]];
+    cyRows.forEach((row, idx) => rows.push([idx+1,row.root,row.parent,row.child,...linkTypes.map(t => row.countsByLinkType[t]||0)]));
+    exportXLSX([{ name: 'CY', rows }]);
+  });
+}
+
+/* وحدة LOG: إدارة السجل مع windowing */
+function renderTableLOG() {
+  const panel = document.getElementById('panelLOG');
+  const data = DataStore.getData();
+  const { referenceLists } = data;
+  panel.innerHTML = `
+    <div class="controls">
+      <input id="searchLOG" type="search" placeholder="بحث عام" />
+      <select id="filterAction"><option value="">نوع الإجراء</option>${referenceLists.actionTypes.map(a => `<option>${a}</option>`).join('')}</select>
+      <select id="filterLink"><option value="">نوع الارتباط</option>${referenceLists.linkTypes.map(a => `<option>${a}</option>`).join('')}</select>
+      <input id="filterDateFrom" type="date" aria-label="من تاريخ الإدخال">
+      <input id="filterDateTo" type="date" aria-label="إلى تاريخ الإدخال">
+      <button id="addLOG" class="primary">➕ إضافة</button>
+      <button id="exportLOG">📊 تصدير</button>
+      <button id="importLOG">📥 استيراد</button>
+    </div>
+    <div class="virtual-table" aria-label="سجل الإجراءات"><div class="virtual-spacer"></div><table><thead><tr>
+      <th>#</th>
+      <th>الرقم</th>
+      <th>نوع الإجراء</th>
+      <th>الجهة السابقة</th>
+      <th>الجهة اللاحقة</th>
+      <th>نوع الارتباط</th>
+      <th>التشكيل القديم</th>
+      <th>التشكيل الجديد</th>
+      <th>تاريخ الإجراء</th>
+      <th>تاريخ الإدخال</th>
+      <th>إجراءات</th>
+    </tr></thead><tbody></tbody></table></div></div>
+  `;
+  const virtual = panel.querySelector('.virtual-table');
+  const spacer = panel.querySelector('.virtual-spacer');
+  const tbody = panel.querySelector('tbody');
+  const rowHeight = 48;
+  const buffer = 10;
+
+  const filters = () => ({
+    term: panel.querySelector('#searchLOG').value.trim(),
+    action: panel.querySelector('#filterAction').value,
+    link: panel.querySelector('#filterLink').value,
+    from: panel.querySelector('#filterDateFrom').value,
+    to: panel.querySelector('#filterDateTo').value
+  });
+
+  function filteredRows() {
+    const { term, action, link, from, to } = filters();
+    return data.actionsLog.filter(item => {
+      const target = `${item.number} ${item.actionType} ${item.prev.root} ${item.next.root}`;
+      if (term && !target.includes(term)) return false;
+      if (action && item.actionType !== action) return false;
+      if (link && item.prev.linkType !== link && item.next.linkType !== link) return false;
+      if (from && (item.entryDate || '') < from) return false;
+      if (to && (item.entryDate || '') > to) return false;
+      return true;
+    });
+  }
+
+  function renderWindow() {
+    const rows = filteredRows();
+    const scrollTop = virtual.scrollTop;
+    const startIndex = Math.max(0, Math.floor(scrollTop / rowHeight) - buffer);
+    const endIndex = Math.min(rows.length, Math.ceil((scrollTop + virtual.clientHeight) / rowHeight) + buffer);
+    spacer.style.height = `${rows.length * rowHeight}px`;
+    tbody.style.transform = `translateY(${startIndex * rowHeight}px)`;
+    tbody.innerHTML = '';
+    rows.slice(startIndex, endIndex).forEach((row, idx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${startIndex + idx + 1}</td>
+        <td>${row.number || ''}</td>
+        <td>${row.actionType}</td>
+        <td>${row.prev.root || ''} / ${row.prev.parent || ''} / ${row.prev.child || ''}</td>
+        <td>${row.next.root || ''} / ${row.next.parent || ''} / ${row.next.child || ''}</td>
+        <td>${row.prev.linkType || row.next.linkType || ''}</td>
+        <td>${row.prev.formation || ''}</td>
+        <td>${row.next.formation || ''}</td>
+        <td>${row.actionDate || ''}</td>
+        <td>${row.entryDate || ''}</td>
+        <td>
+          <button class="primary" data-edit="${row.id}">تعديل</button>
+          <button class="danger" data-del="${row.id}">حذف</button>
+        </td>`;
+      tbody.appendChild(tr);
+    });
+    panel.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => openLOGModal(btn.dataset.edit)));
+    panel.querySelectorAll('[data-del]').forEach(btn => btn.addEventListener('click', () => deleteLOG(btn.dataset.del)));
+  }
+  renderWindow();
+  ['#searchLOG','#filterAction','#filterLink','#filterDateFrom','#filterDateTo'].forEach(sel => panel.querySelector(sel).addEventListener('input', renderWindow));
+  virtual.addEventListener('scroll', () => requestAnimationFrame(renderWindow));
+  panel.querySelector('#addLOG').addEventListener('click', () => openLOGModal());
+  panel.querySelector('#exportLOG').addEventListener('click', () => {
+    const headers = ['number','actionType','prev.root','prev.parent','prev.child','prev.linkType','prev.linkForm','prev.descriptor','prev.formation','next.root','next.parent','next.child','next.linkType','next.linkForm','next.descriptor','next.formation','actionDate','entryDate'];
+    const rows = [headers];
+    data.actionsLog.forEach(row => {
+      rows.push([
+        row.number || '', row.actionType || '',
+        row.prev.root || '', row.prev.parent || '', row.prev.child || '', row.prev.linkType || '', row.prev.linkForm || '', row.prev.descriptor || '', row.prev.formation || '',
+        row.next.root || '', row.next.parent || '', row.next.child || '', row.next.linkType || '', row.next.linkForm || '', row.next.descriptor || '', row.next.formation || '',
+        row.actionDate || '', row.entryDate || ''
+      ]);
+    });
+    exportXLSX([{ name: 'LOG', rows }]);
+  });
+  panel.querySelector('#importLOG').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.xlsx,.xls,.csv';
+    input.onchange = () => {
+      const file = input.files[0];
+      if (!file) return;
+      importXLSX(file, (workbook) => {
+        const first = workbook.SheetNames[0];
+        const ws = workbook.Sheets[first];
+        const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        const headers = rows.shift();
+        const required = ['number','actionType','prev.root','prev.parent','prev.child','prev.linkType','prev.linkForm','prev.descriptor','prev.formation','next.root','next.parent','next.child','next.linkType','next.linkForm','next.descriptor','next.formation','actionDate','entryDate'];
+        if (!required.every((h, idx) => headers[idx] === h)) {
+          showMessage('error', 'الرؤوس غير متطابقة.');
+          return;
+        }
+        const newRows = rows.map(line => ({
+          id: crypto.randomUUID(),
+          number: line[0] || '',
+          actionType: line[1] || '',
+          prev: {
+            root: line[2] || '',
+            parent: line[3] || '',
+            child: line[4] || '',
+            linkType: line[5] || '',
+            linkForm: line[6] || '',
+            descriptor: line[7] || '',
+            formation: line[8] || ''
+          },
+          next: {
+            root: line[9] || '',
+            parent: line[10] || '',
+            child: line[11] || '',
+            linkType: line[12] || '',
+            linkForm: line[13] || '',
+            descriptor: line[14] || '',
+            formation: line[15] || ''
+          },
+          actionDate: line[16] || '',
+          entryDate: line[17] || ''
+        }));
+        if (confirm('هل تريد استبدال السجل بالكامل؟')) {
+          data.actionsLog = newRows;
+        } else {
+          data.actionsLog.push(...newRows);
+        }
+        DataStore.markDirty();
+        renderAll();
+        showMessage('success', 'تم استيراد السجل.');
+      });
+    };
+    input.click();
+  });
+}
+
+function openLOGModal(id = null) {
+  const data = DataStore.getData();
+  const { referenceLists } = data;
+  const record = id ? data.actionsLog.find(r => r.id === id) : {
+    id: crypto.randomUUID(), number: '', actionType: '', prev: {}, next: {}, actionDate: '', entryDate: ''
+  };
+  const modal = document.createElement('div');
+  modal.className = 'modal-backdrop';
+  modal.innerHTML = `
+    <div class="modal">
+      <header><h2>${id ? 'تعديل سجل' : 'إضافة سجل'}</h2><button onclick="this.closest('.modal-backdrop').remove()">✖</button></header>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.5rem;">
+        <label>الرقم<input type="text" id="logNumber" value="${record.number || ''}"></label>
+        <label>نوع الإجراء<select id="logAction">${['',...referenceLists.actionTypes].map(opt => `<option value="${opt}" ${opt===record.actionType?'selected':''}>${opt||'اختر'}</option>`).join('')}</select></label>
+        <label>تاريخ الإجراء<input type="date" id="logActionDate" value="${record.actionDate || ''}"></label>
+        <label>تاريخ الإدخال<input type="date" id="logEntryDate" value="${record.entryDate || ''}"></label>
+        ${['prev','next'].map(side => `
+          <fieldset style="border:1px solid var(--divider);border-radius:8px;padding:0.5rem;">
+            <legend>${side==='prev'?'الجهة السابقة':'الجهة اللاحقة'}</legend>
+            <label>الجد<input type="text" data-side="${side}" data-field="root" value="${record[side].root || ''}"></label>
+            <label>الأب<input type="text" data-side="${side}" data-field="parent" value="${record[side].parent || ''}"></label>
+            <label>الابن<input type="text" data-side="${side}" data-field="child" value="${record[side].child || ''}"></label>
+            <label>نوع الارتباط<select data-side="${side}" data-field="linkType">${['',...referenceLists.linkTypes].map(opt => `<option value="${opt}" ${opt===(record[side].linkType||'')?'selected':''}>${opt||'اختر'}</option>`).join('')}</select></label>
+            <label>شكل الارتباط<select data-side="${side}" data-field="linkForm">${['',...referenceLists.linkForms].map(opt => `<option value="${opt}" ${opt===(record[side].linkForm||'')?'selected':''}>${opt||'اختر'}</option>`).join('')}</select></label>
+            <label>التوصيف<select data-side="${side}" data-field="descriptor">${['',...referenceLists.descriptors].map(opt => `<option value="${opt}" ${opt===(record[side].descriptor||'')?'selected':''}>${opt||'اختر'}</option>`).join('')}</select></label>
+            <label>التشكيل<select data-side="${side}" data-field="formation">${['',...referenceLists.formations].map(opt => `<option value="${opt}" ${opt===(record[side].formation||'')?'selected':''}>${opt||'اختر'}</option>`).join('')}</select></label>
+          </fieldset>`).join('')}
+      </div>
+      <footer>
+        <button class="primary" id="saveLOG">حفظ</button>
+        <button onclick="this.closest('.modal-backdrop').remove()">إلغاء</button>
+      </footer>
+    </div>`;
+  modal.querySelector('#saveLOG').addEventListener('click', () => {
+    const actionType = modal.querySelector('#logAction').value;
+    if (!actionType) { showMessage('error', 'اختر نوع الإجراء.'); return; }
+    const number = modal.querySelector('#logNumber').value;
+    const actionDate = modal.querySelector('#logActionDate').value;
+    const entryDate = modal.querySelector('#logEntryDate').value;
+    const prev = {}, next = {};
+    modal.querySelectorAll('[data-side]').forEach(el => {
+      const target = el.dataset.side === 'prev' ? prev : next;
+      target[el.dataset.field] = el.value;
+    });
+    const payload = { id: record.id, number, actionType, prev, next, actionDate, entryDate };
+    if (id) {
+      const idx = data.actionsLog.findIndex(r => r.id === id);
+      data.actionsLog[idx] = payload;
+    } else {
+      data.actionsLog.push(payload);
+    }
+    DataStore.markDirty();
+    renderAll();
+    modal.remove();
+  });
+  document.body.appendChild(modal);
+}
+
+function deleteLOG(id) {
+  if (!confirm('تأكيد حذف السجل؟')) return;
+  const data = DataStore.getData();
+  const idx = data.actionsLog.findIndex(r => r.id === id);
+  if (idx >= 0) {
+    data.actionsLog.splice(idx, 1);
+    DataStore.markDirty();
+    renderAll();
+  }
+}
+
+/* وحدة AFX: قواعد التأثير */
+function renderTableAFX() {
+  const panel = document.getElementById('panelAFX');
+  const data = DataStore.getData();
+  const linkTypes = data.referenceLists.linkTypes;
+  panel.innerHTML = `
+    <div class="controls">
+      <button class="primary" id="addAFX">➕ إضافة تأثير</button>
+    </div>
+    <div class="table-container"><table><thead><tr>
+      <th>#</th><th>نوع الإجراء</th><th>تطبيق على</th><th>Δ السابقة</th><th>Δ اللاحقة</th><th>إجراءات</th>
+    </tr></thead><tbody></tbody></table></div>
+  `;
+  const tbody = panel.querySelector('tbody');
+  data.effects.forEach((rule, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${idx+1}</td>
+      <td>${rule.actionType}</td>
+      <td>${rule.applyTo}</td>
+      <td>${Object.entries(rule.deltasPrev||{}).map(([k,v]) => `${k}:${v}`).join(',')}</td>
+      <td>${Object.entries(rule.deltasNext||{}).map(([k,v]) => `${k}:${v}`).join(',')}</td>
+      <td><button class="primary" data-edit="${rule.id}">تعديل</button> <button class="danger" data-del="${rule.id}">حذف</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  panel.querySelector('#addAFX').addEventListener('click', () => openAFXModal());
+  panel.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => openAFXModal(btn.dataset.edit)));
+  panel.querySelectorAll('[data-del]').forEach(btn => btn.addEventListener('click', () => deleteAFX(btn.dataset.del)));
+}
+function openAFXModal(id = null) {
+  const data = DataStore.getData();
+  const linkTypes = data.referenceLists.linkTypes;
+  const record = id ? data.effects.find(r => r.id === id) : { id: crypto.randomUUID(), actionType: '', applyTo: 'next', deltasPrev: {}, deltasNext: {} };
+  const modal = document.createElement('div');
+  modal.className = 'modal-backdrop';
+  modal.innerHTML = `
+    <div class="modal">
+      <header><h2>${id ? 'تعديل تأثير' : 'إضافة تأثير'}</h2><button onclick="this.closest('.modal-backdrop').remove()">✖</button></header>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.5rem;">
+        <label>نوع الإجراء<select id="afxAction">${['',...data.referenceLists.actionTypes].map(opt => `<option value="${opt}" ${opt===record.actionType?'selected':''}>${opt||'اختر'}</option>`).join('')}</select></label>
+        <label>تطبيق على<select id="afxApply"><option value="prev" ${record.applyTo==='prev'?'selected':''}>السابق</option><option value="next" ${record.applyTo==='next'?'selected':''}>اللاحق</option><option value="bothSame" ${record.applyTo==='bothSame'?'selected':''}>كلاهما (متطابق)</option><option value="bothDifferent" ${record.applyTo==='bothDifferent'?'selected':''}>كلاهما (مختلف)</option></select></label>
+        <div style="grid-column:1/-1;">
+          <h4>تغييرات السابقة</h4>
+          ${linkTypes.map(t => `<label>${t}<input type="number" data-prev="${t}" value="${record.deltasPrev?.[t] || 0}"></label>`).join('')}
+        </div>
+        <div style="grid-column:1/-1;">
+          <h4>تغييرات اللاحقة</h4>
+          ${linkTypes.map(t => `<label>${t}<input type="number" data-next="${t}" value="${record.deltasNext?.[t] || 0}"></label>`).join('')}
+        </div>
+      </div>
+      <footer>
+        <button class="primary" id="saveAFX">حفظ</button>
+        <button onclick="this.closest('.modal-backdrop').remove()">إلغاء</button>
+      </footer>
+    </div>`;
+  modal.querySelector('#saveAFX').addEventListener('click', () => {
+    const actionType = modal.querySelector('#afxAction').value;
+    if (!actionType) { showMessage('error', 'اختر نوع الإجراء.'); return; }
+    const applyTo = modal.querySelector('#afxApply').value;
+    const deltasPrev = {}, deltasNext = {};
+    modal.querySelectorAll('[data-prev]').forEach(input => {
+      const val = Number(input.value) || 0;
+      if (val !== 0) deltasPrev[input.dataset.prev] = val;
+    });
+    modal.querySelectorAll('[data-next]').forEach(input => {
+      const val = Number(input.value) || 0;
+      if (val !== 0) deltasNext[input.dataset.next] = val;
+    });
+    const payload = { id: record.id, actionType, applyTo, deltasPrev, deltasNext };
+    if (id) {
+      const idx = data.effects.findIndex(r => r.id === id);
+      data.effects[idx] = payload;
+    } else {
+      data.effects.push(payload);
+    }
+    DataStore.markDirty();
+    renderAll();
+    modal.remove();
+  });
+  document.body.appendChild(modal);
+}
+
+function deleteAFX(id) {
+  if (!confirm('حذف قاعدة التأثير؟')) return;
+  const data = DataStore.getData();
+  const idx = data.effects.findIndex(r => r.id === id);
+  if (idx >= 0) {
+    data.effects.splice(idx, 1);
+    DataStore.markDirty();
+    renderAll();
+  }
+}
+
+/* وحدة الجهة: إدارة الثلاثيات */
+function renderEntities() {
+  const panel = document.getElementById('panelENT');
+  const data = DataStore.getData();
+  panel.innerHTML = `
+    <div class="controls">
+      <button class="primary" id="addEntity">➕ إضافة ثلاثي</button>
+      <button id="importEntities">📥 استيراد CSV</button>
+    </div>
+    <div class="table-container"><table><thead><tr><th>#</th><th>الجد</th><th>الأب</th><th>الابن</th><th>إجراءات</th></tr></thead><tbody></tbody></table></div>`;
+  const tbody = panel.querySelector('tbody');
+  data.entities.forEach((row, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${idx+1}</td><td>${row.root}</td><td>${row.parent}</td><td>${row.child}</td><td><button class="primary" data-edit="${idx}">تعديل</button> <button class="danger" data-del="${idx}">حذف</button></td>`;
+    tbody.appendChild(tr);
+  });
+  panel.querySelector('#addEntity').addEventListener('click', () => openEntityModal());
+  panel.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => openEntityModal(parseInt(btn.dataset.edit))));
+  panel.querySelectorAll('[data-del]').forEach(btn => btn.addEventListener('click', () => deleteEntity(parseInt(btn.dataset.del))));
+  panel.querySelector('#importEntities').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv';
+    input.onchange = () => {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const lines = reader.result.split(/\r?\n/).filter(Boolean);
+        const newRows = [];
+        lines.slice(1).forEach(line => {
+          const [root, parent, child] = line.split(',').map(v => v?.trim());
+          if (root && parent && child) newRows.push({ root, parent, child });
+        });
+        if (!newRows.length) { showMessage('error', 'لا توجد صفوف صالحة.'); return; }
+        let duplicates = 0;
+        newRows.forEach(row => {
+          if (data.entities.some(e => e.root === row.root && e.parent === row.parent && e.child === row.child)) {
+            duplicates++;
+          } else {
+            data.entities.push(row);
+          }
+        });
+        DataStore.markDirty();
+        renderAll();
+        if (duplicates) {
+          showMessage('error', `تم تجاهل ${duplicates} صفوف مكررة.`);
+        } else {
+          showMessage('success', 'تم استيراد الجهات.');
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  });
+}
+
+function openEntityModal(index = null) {
+  const data = DataStore.getData();
+  const row = index != null ? { ...data.entities[index] } : { root: '', parent: '', child: '' };
+  const modal = document.createElement('div');
+  modal.className = 'modal-backdrop';
+  modal.innerHTML = `
+    <div class="modal">
+      <header><h2>${index!=null?'تعديل':'إضافة'} جهة</h2><button onclick="this.closest('.modal-backdrop').remove()">✖</button></header>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.5rem;">
+        <label>الجد<input type="text" id="entRoot" value="${row.root || ''}"></label>
+        <label>الأب<input type="text" id="entParent" value="${row.parent || ''}"></label>
+        <label>الابن<input type="text" id="entChild" value="${row.child || ''}"></label>
+      </div>
+      <footer>
+        <button class="primary" id="saveEntity">حفظ</button>
+        <button onclick="this.closest('.modal-backdrop').remove()">إلغاء</button>
+      </footer>
+    </div>`;
+  modal.querySelector('#saveEntity').addEventListener('click', () => {
+    const root = modal.querySelector('#entRoot').value.trim();
+    const parent = modal.querySelector('#entParent').value.trim();
+    const child = modal.querySelector('#entChild').value.trim();
+    if (!root || !parent || !child) { showMessage('error', 'لا يسمح بترك الحقول فارغة.'); return; }
+    const payload = { root, parent, child };
+    const exists = data.entities.find((e, idx) => e.root === root && e.parent === parent && e.child === child && idx !== index);
+    if (exists) {
+      showMessage('error', 'المدخل مكرر وتم تجاهله.');
+      return;
+    }
+    if (index != null) {
+      data.entities[index] = payload;
+    } else {
+      data.entities.push(payload);
+    }
+    DataStore.markDirty();
+    renderAll();
+    modal.remove();
+  });
+  document.body.appendChild(modal);
+}
+
+function deleteEntity(index) {
+  if (!confirm('تأكيد الحذف؟')) return;
+  const data = DataStore.getData();
+  data.entities.splice(index,1);
+  DataStore.markDirty();
+  renderAll();
+}
+
+/* وحدة القوائم المرجعية */
+function renderLists() {
+  const panel = document.getElementById('panelREF');
+  const data = DataStore.getData();
+  const listNames = [
+    { key: 'actionTypes', label: 'أنواع الإجراءات' },
+    { key: 'linkTypes', label: 'أنواع الارتباط' },
+    { key: 'linkForms', label: 'أشكال الارتباط' },
+    { key: 'descriptors', label: 'التوصيف' },
+    { key: 'formations', label: 'التشكيل' }
+  ];
+  panel.innerHTML = listNames.map(list => `
+    <section style="margin-bottom:1.5rem;">
+      <header style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+        <h3 style="margin:0;">${list.label}</h3>
+        <button class="primary" data-add="${list.key}">➕ إضافة</button>
+      </header>
+      <div class="table-container"><table><thead><tr><th>#</th><th>القيمة</th><th>إجراءات</th></tr></thead><tbody data-body="${list.key}"></tbody></table></div>
+    </section>
+  `).join('');
+  listNames.forEach(list => {
+    const tbody = panel.querySelector(`[data-body="${list.key}"]`);
+    data.referenceLists[list.key].forEach((item, idx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${idx+1}</td><td>${item}</td><td><button class="primary" data-edit="${list.key}|${idx}">تعديل</button> <button class="danger" data-del="${list.key}|${idx}">حذف</button></td>`;
+      tbody.appendChild(tr);
+    });
+  });
+  panel.querySelectorAll('[data-add]').forEach(btn => btn.addEventListener('click', () => openListModal(btn.dataset.add)));
+  panel.querySelectorAll('[data-edit]').forEach(btn => {
+    const [list, idx] = btn.dataset.edit.split('|');
+    btn.addEventListener('click', () => openListModal(list, parseInt(idx)));
+  });
+  panel.querySelectorAll('[data-del]').forEach(btn => {
+    const [list, idx] = btn.dataset.del.split('|');
+    btn.addEventListener('click', () => deleteListItem(list, parseInt(idx)));
+  });
+}
+
+function openListModal(key, index = null) {
+  const data = DataStore.getData();
+  const list = data.referenceLists[key];
+  const modal = document.createElement('div');
+  modal.className = 'modal-backdrop';
+  modal.innerHTML = `
+    <div class="modal">
+      <header><h2>${index!=null?'تعديل':'إضافة'} عنصر</h2><button onclick="this.closest('.modal-backdrop').remove()">✖</button></header>
+      <label>القيمة<input type="text" id="listValue" value="${index!=null ? list[index] : ''}"></label>
+      <footer>
+        <button class="primary" id="saveList">حفظ</button>
+        <button onclick="this.closest('.modal-backdrop').remove()">إلغاء</button>
+      </footer>
+    </div>`;
+  modal.querySelector('#saveList').addEventListener('click', () => {
+    const value = modal.querySelector('#listValue').value.trim();
+    if (!value) { showMessage('error', 'القيمة مطلوبة.'); return; }
+    if (index != null) {
+      list[index] = value;
+    } else {
+      list.push(value);
+    }
+    DataStore.markDirty();
+    renderAll();
+    modal.remove();
+  });
+  document.body.appendChild(modal);
+}
+
+function deleteListItem(key, index) {
+  const data = DataStore.getData();
+  const list = data.referenceLists[key];
+  const value = list[index];
+  let used = false;
+  if (key === 'actionTypes') {
+    used = data.actionsLog.some(row => row.actionType === value) || data.effects.some(rule => rule.actionType === value);
+  } else if (key === 'linkTypes') {
+    used = data.beginYear.some(row => Object.keys(row.countsByLinkType || {}).includes(value)) ||
+      data.actionsLog.some(row => row.prev?.linkType === value || row.next?.linkType === value) ||
+      data.effects.some(rule => Object.keys(rule.deltasPrev || {}).includes(value) || Object.keys(rule.deltasNext || {}).includes(value));
+  } else if (key === 'linkForms') {
+    used = data.actionsLog.some(row => row.prev?.linkForm === value || row.next?.linkForm === value);
+  } else if (key === 'descriptors') {
+    used = data.actionsLog.some(row => row.prev?.descriptor === value || row.next?.descriptor === value);
+  } else if (key === 'formations') {
+    used = data.actionsLog.some(row => row.prev?.formation === value || row.next?.formation === value);
+  }
+  if (used && !confirm('القيمة مستخدمة حاليًا. هل تريد حذفها مع المخاطرة ببيانات غير متسقة؟')) return;
+  if (!used && !confirm('تحذير: سيؤثر الحذف على البيانات المرجعية. متابعة؟')) return;
+  list.splice(index, 1);
+  DataStore.markDirty();
+  renderAll();
+}
+
+/* وحدة تعديلات التشكيل */
+function renderFormChanges() {
+  const panel = document.getElementById('panelFORM');
+  const data = DataStore.getData();
+  const filtered = data.actionsLog.filter(item => (item.prev?.formation && item.prev.formation !== '-') || (item.next?.formation && item.next.formation !== '-'));
+  panel.innerHTML = `
+    <div class="controls">
+      <button id="markAll" class="primary">تحديد الكل كمكتمل</button>
+    </div>
+    <div class="table-container"><table><thead><tr><th>#</th><th>الرقم</th><th>التشكيل القديم</th><th>التشكيل الجديد</th><th>تم</th></tr></thead><tbody></tbody></table></div>
+  `;
+  const tbody = panel.querySelector('tbody');
+  filtered.forEach((row, idx) => {
+    const key = row.id;
+    const checked = data.formationArchive[key];
+    const tr = document.createElement('tr');
+    if (checked) tr.style.opacity = 0.5;
+    tr.innerHTML = `<td>${idx+1}</td><td>${row.number || ''}</td><td>${row.prev.formation || '-'}</td><td>${row.next.formation || '-'}</td><td class="checkbox-cell"><input type="checkbox" data-id="${key}" ${checked?'checked':''}></td>`;
+    tbody.appendChild(tr);
+  });
+  panel.querySelectorAll('input[type="checkbox"]').forEach(box => box.addEventListener('change', () => {
+    data.formationArchive[box.dataset.id] = box.checked;
+    DataStore.markDirty();
+    renderFormChanges();
+  }));
+  panel.querySelector('#markAll').addEventListener('click', () => {
+    filtered.forEach(row => data.formationArchive[row.id] = true);
+    DataStore.markDirty();
+    renderFormChanges();
+  });
+}
+
+/* وحدة الكشوفات */
+function renderReports() {
+  const panel = document.getElementById('panelREP');
+  panel.innerHTML = `
+    <div class="controls">
+      <label>نوع التقرير<select id="reportType"><option value="BY">بداية السنة</option><option value="CY">الوضعية الحالية</option><option value="LOG">سجل الإجراءات</option></select></label>
+      <label>من<input type="date" id="reportFrom"></label>
+      <label>إلى<input type="date" id="reportTo"></label>
+      <button class="primary" id="reportPreview">معاينة سريعة</button>
+      <button id="reportExport">تصدير Excel</button>
+    </div>
+    <div class="table-container"><table><thead><tr><th>المخرجات</th></tr></thead><tbody id="reportBody"><tr><td>اختر المعايير ثم استخدم الأزرار أعلاه.</td></tr></tbody></table></div>
+  `;
+  const body = panel.querySelector('#reportBody');
+  const getFiltered = () => {
+    const type = panel.querySelector('#reportType').value;
+    const from = panel.querySelector('#reportFrom').value;
+    const to = panel.querySelector('#reportTo').value;
+    const data = DataStore.getData();
+    if (type === 'BY') {
+      return data.beginYear;
+    }
+    if (type === 'CY') {
+      const rows = computeCY(data.beginYear, data.actionsLog, data.effects);
+      return rows;
+    }
+    return data.actionsLog.filter(row => {
+      if (from && (row.entryDate || '') < from) return false;
+      if (to && (row.entryDate || '') > to) return false;
+      return true;
+    });
+  };
+  panel.querySelector('#reportPreview').addEventListener('click', () => {
+    const type = panel.querySelector('#reportType').value;
+    const rows = getFiltered();
+    body.innerHTML = '';
+    if (!rows.length) {
+      body.innerHTML = '<tr><td>لا توجد بيانات.</td></tr>';
+      return;
+    }
+    if (type === 'BY') {
+      const linkTypes = data.referenceLists.linkTypes;
+      body.innerHTML = rows.slice(0, 20).map(row => `<tr><td>${row.root} / ${row.parent} / ${row.child} ⇒ ${linkTypes.map(t => `${t}:${row.countsByLinkType[t]||0}`).join(' | ')}</td></tr>`).join('');
+    } else if (type === 'CY') {
+      const data = DataStore.getData();
+      const linkTypes = data.referenceLists.linkTypes;
+      body.innerHTML = rows.slice(0, 20).map(row => `<tr><td>${row.root} / ${row.parent} / ${row.child} ⇒ ${linkTypes.map(t => `${t}:${row.countsByLinkType[t]||0}`).join(' | ')}</td></tr>`).join('');
+    } else {
+      body.innerHTML = rows.slice(0, 20).map(row => `<tr><td>#${row.number} - ${row.actionType} (${row.entryDate})</td></tr>`).join('');
+    }
+  });
+  panel.querySelector('#reportExport').addEventListener('click', () => {
+    const type = panel.querySelector('#reportType').value;
+    const data = DataStore.getData();
+    if (type === 'BY') {
+      const linkTypes = data.referenceLists.linkTypes;
+      const rows = [['#','root','parent','child',...linkTypes]];
+      data.beginYear.forEach((row, idx) => rows.push([idx+1,row.root,row.parent,row.child,...linkTypes.map(t => row.countsByLinkType[t]||0)]));
+      exportXLSX([{ name: 'BY_Report', rows }]);
+    } else if (type === 'CY') {
+      const linkTypes = data.referenceLists.linkTypes;
+      const rows = [['#','root','parent','child',...linkTypes]];
+      const filtered = computeCY(data.beginYear, data.actionsLog, data.effects);
+      filtered.forEach((row, idx) => rows.push([idx+1,row.root,row.parent,row.child,...linkTypes.map(t => row.countsByLinkType[t]||0)]));
+      exportXLSX([{ name: 'CY_Report', rows }]);
+    } else {
+      const headers = ['number','actionType','prev.root','prev.parent','prev.child','prev.linkType','prev.linkForm','prev.descriptor','prev.formation','next.root','next.parent','next.child','next.linkType','next.linkForm','next.descriptor','next.formation','actionDate','entryDate'];
+      const rows = [headers];
+      const filtered = getFiltered();
+      filtered.forEach(row => rows.push([
+        row.number || '', row.actionType || '',
+        row.prev.root || '', row.prev.parent || '', row.prev.child || '', row.prev.linkType || '', row.prev.linkForm || '', row.prev.descriptor || '', row.prev.formation || '',
+        row.next.root || '', row.next.parent || '', row.next.child || '', row.next.linkType || '', row.next.linkForm || '', row.next.descriptor || '', row.next.formation || '',
+        row.actionDate || '', row.entryDate || ''
+      ]));
+      exportXLSX([{ name: 'LOG_Report', rows }]);
+    }
+  });
+}
+
+/* وحدة المساعدة */
+function renderHelp() {
+  const panel = document.getElementById('panelHELP');
+  panel.innerHTML = `
+    <article style="line-height:1.8;">
+      <h2>تعليمات التشغيل</h2>
+      <p>اتبع الترتيب التالي: إعداد القوائم المرجعية، ثم إدخال بيانات بداية السنة (BY)، ثم ضبط قواعد التأثير (AFX)، ثم تسجيل الإجراءات في سجل LOG. الوضعية الحالية (CY) تُحسب تلقائيًا.</p>
+      <p>التواريخ: <strong>تاريخ الإجراء</strong> هو التاريخ الفعلي للواقعة، أما <strong>تاريخ الإدخال</strong> فهو تاريخ تسجيلها في النظام ويُستخدم في التقارير.</p>
+      <h3>الاختصارات</h3>
+      <ul>
+        <li><kbd>/</kbd> للتركيز على البحث الحالي.</li>
+        <li><kbd>N</kbd> لإضافة صف/سجل بحسب التبويب النشط.</li>
+        <li><kbd>S</kbd> لحفظ البيانات فورًا.</li>
+        <li><kbd>F</kbd> لتفعيل وضع ملء الشاشة.</li>
+        <li><kbd>Ctrl</kbd>+<kbd>E</kbd> لتصدير كافة الجداول كملف Excel.</li>
+        <li><kbd>Ctrl</kbd>+<kbd>J</kbd> لتصدير نسخة JSON كاملة.</li>
+      </ul>
+      <h3>نماذج الاستيراد</h3>
+      <p>التزم بالترويسات المشار إليها في كل تبويب. يمكن إضافة أنواع ارتباط جديدة تلقائيًا عند استيراد BY.</p>
+      <h3>سيناريو التحقق</h3>
+      <p>تأكد من إدخال بيانات BY و LOG كما في التعليمات؛ سيظهر في تبويب CY أن الأرقام النهائية مطابقة للسنة الحالية بعد تطبيق الإجراءات.</p>
+    </article>
+  `;
+}
+
+/* وحدة التصدير والاستيراد العام */
+function exportDatabaseJSON() {
+  const data = DataStore.getData();
+  const blob = new Blob([JSON.stringify({
+    referenceLists: data.referenceLists,
+    entities: data.entities,
+    beginYear: data.beginYear,
+    actionsLog: data.actionsLog,
+    effects: data.effects,
+    formationArchive: data.formationArchive
+  }, null, 2)], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `orgm_backup_${new Date().toISOString().slice(0,19)}.json`;
+  link.click();
+}
+
+function importDatabaseJSON() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = () => {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const obj = JSON.parse(reader.result);
+        obj.referenceLists = Object.assign({ actionTypes: [], linkTypes: [], linkForms: [], descriptors: [], formations: [] }, obj.referenceLists || {});
+        obj.entities = obj.entities || [];
+        obj.beginYear = obj.beginYear || [];
+        obj.actionsLog = obj.actionsLog || [];
+        obj.effects = obj.effects || [];
+        obj.formationArchive = obj.formationArchive || {};
+        if (!confirm('هل تريد استبدال البيانات الحالية؟ (إلغاء يعني دمج)')) {
+          const data = DataStore.getData();
+          Object.keys(obj.referenceLists || {}).forEach(key => {
+            obj.referenceLists[key].forEach(item => {
+              if (!data.referenceLists[key].includes(item)) data.referenceLists[key].push(item);
+            });
+          });
+          data.entities.push(...(obj.entities || []));
+          data.beginYear.push(...(obj.beginYear || []));
+          data.actionsLog.push(...(obj.actionsLog || []));
+          data.effects.push(...(obj.effects || []));
+          Object.assign(data.formationArchive, obj.formationArchive || {});
+        } else {
+          DataStore.setData(obj, true);
+          return;
+        }
+        DataStore.markDirty();
+        renderAll();
+        showMessage('success', 'تم استيراد قاعدة البيانات.');
+      } catch (e) {
+        showMessage('error', 'ملف غير صالح.');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+async function exportAllExcel() {
+  const data = DataStore.getData();
+  const sheets = [];
+  sheets.push({ name: 'Entities', rows: [['root','parent','child'], ...data.entities.map(e => [e.root, e.parent, e.child])] });
+  const linkTypes = data.referenceLists.linkTypes;
+  sheets.push({ name: 'BY', rows: [['#','root','parent','child',...linkTypes], ...data.beginYear.map((row, idx) => [idx+1,row.root,row.parent,row.child,...linkTypes.map(t => row.countsByLinkType[t]||0)])] });
+  sheets.push({ name: 'LOG', rows: [['number','actionType','prev.root','prev.parent','prev.child','prev.linkType','prev.linkForm','prev.descriptor','prev.formation','next.root','next.parent','next.child','next.linkType','next.linkForm','next.descriptor','next.formation','actionDate','entryDate'], ...data.actionsLog.map(row => [row.number||'',row.actionType||'',row.prev.root||'',row.prev.parent||'',row.prev.child||'',row.prev.linkType||'',row.prev.linkForm||'',row.prev.descriptor||'',row.prev.formation||'',row.next.root||'',row.next.parent||'',row.next.child||'',row.next.linkType||'',row.next.linkForm||'',row.next.descriptor||'',row.next.formation||'',row.actionDate||'',row.entryDate||''])] });
+  sheets.push({ name: 'AFX', rows: [['actionType','applyTo','deltasPrev','deltasNext'], ...data.effects.map(rule => [rule.actionType, rule.applyTo, JSON.stringify(rule.deltasPrev), JSON.stringify(rule.deltasNext)])] });
+  sheets.push({ name: 'Lists', rows: [ ['actionTypes', data.referenceLists.actionTypes.join('|')], ['linkTypes', data.referenceLists.linkTypes.join('|')], ['linkForms', data.referenceLists.linkForms.join('|')], ['descriptors', data.referenceLists.descriptors.join('|')], ['formations', data.referenceLists.formations.join('|')] ] });
+  exportXLSX(sheets);
+}
+
+function clearDatabase() {
+  if (!confirm('سيتم تفريغ كافة البيانات. متابعة؟')) return;
+  localStorage.removeItem('orgm_store_v1');
+  DataStore.setData({ referenceLists: { actionTypes: [], linkTypes: [], linkForms: [], descriptors: [], formations: [] }, entities: [], beginYear: [], actionsLog: [], effects: [], formationArchive: {} });
+  showMessage('success', 'تم تفريغ قاعدة البيانات.');
+}
+
+/* وحدة اختصارات لوحة المفاتيح */
+(function setupShortcuts() {
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key.toLowerCase() === 'e') { e.preventDefault(); exportAllExcel(); }
+    if (e.ctrlKey && e.key.toLowerCase() === 'j') { e.preventDefault(); exportDatabaseJSON(); }
+    if (e.key === 'F' && !e.ctrlKey && !e.metaKey) { e.preventDefault(); toggleFullscreen(); }
+    if (e.key === 'S' && !e.ctrlKey && !e.metaKey) { e.preventDefault(); handleSave(); }
+    if (e.key === 'N') { e.preventDefault(); triggerAdd(); }
+    if (e.key === '/' && !e.ctrlKey) { e.preventDefault(); focusSearch(); }
+  });
+})();
+
+function triggerAdd() {
+  const active = document.querySelector('.tabs button.active').dataset.tab;
+  if (active === 'BY') openBYModal();
+  if (active === 'LOG') openLOGModal();
+  if (active === 'AFX') openAFXModal();
+  if (active === 'ENT') openEntityModal();
+}
+
+function focusSearch() {
+  const active = document.querySelector('.tabs button.active').dataset.tab;
+  const map = {
+    BY: '#searchBY',
+    CY: '#searchCY',
+    LOG: '#searchLOG'
+  };
+  const selector = map[active];
+  if (selector) {
+    const input = document.querySelector(selector);
+    if (input) input.focus();
+  }
+}
+
+function handleSave() {
+  saveLocal();
+  if (DataStore.getFolderHandle()) saveToFolder();
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+/* وحدة شريط الأدوات */
+(function setupToolbar() {
+  document.querySelector('[data-action="help"]').addEventListener('click', () => {
+    document.querySelector('[data-tab="HELP"]').click();
+  });
+  document.querySelector('[data-action="save"]').addEventListener('click', handleSave);
+  document.querySelector('[data-action="pick"]').addEventListener('click', pickFolder);
+  document.querySelector('[data-action="loadFolder"]').addEventListener('click', loadFromFolder);
+  document.querySelector('[data-action="exportJSON"]').addEventListener('click', exportDatabaseJSON);
+  document.querySelector('[data-action="importJSON"]').addEventListener('click', importDatabaseJSON);
+  document.querySelector('[data-action="clear"]').addEventListener('click', clearDatabase);
+  document.querySelector('[data-action="fullscreen"]').addEventListener('click', toggleFullscreen);
+  document.querySelector('[data-action="exportExcel"]').addEventListener('click', exportAllExcel);
+  document.querySelector('[data-action="importExcel"]').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.xlsx,.xls';
+    input.onchange = () => {
+      const file = input.files[0];
+      if (!file) return;
+      importXLSX(file, (workbook) => {
+        try {
+          const parsed = parseWorkbook(workbook);
+          if (confirm('هل تريد استبدال كافة الجداول بالملف؟ (إلغاء يعني الدمج)')) {
+            DataStore.setData(parsed, true);
+          } else {
+            const current = DataStore.getData();
+            Object.keys(parsed.referenceLists).forEach(key => {
+              parsed.referenceLists[key].forEach(value => {
+                if (!current.referenceLists[key].includes(value)) current.referenceLists[key].push(value);
+              });
+            });
+            current.entities.push(...parsed.entities);
+            current.beginYear.push(...parsed.beginYear);
+            current.actionsLog.push(...parsed.actionsLog);
+            current.effects.push(...parsed.effects);
+            DataStore.markDirty();
+            renderAll();
+          }
+          showMessage('success', 'تم استيراد ملف Excel متعدد الجداول.');
+        } catch (e) {
+          showMessage('error', 'ملف Excel غير صالح.');
+        }
+      });
+    };
+    input.click();
+  });
+})();
+
+/* وحدة تهيئة التطبيق */
+(function init() {
+  DataStore.initFolder();
+  renderAll();
+})();
+</script>
+</body>
+</html>
